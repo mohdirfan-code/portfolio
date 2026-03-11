@@ -1,0 +1,61 @@
+lute",top:-24,left:-2,background:"#00D1FF",color:"white",fontSize:"11px",fontWeight:600,padding:"3px 6px",borderRadius:"2px 2px 2px 0"},children:n.elementLabel||"Element"})})}),o.jsx(Ge,{children:n.comment&&o.jsx(_T,{x:n.comment.x,y:n.comment.y,text:n.comment.text,user:"Gowtham Oleti"})}),o.jsx(up,{name:"Gowtham Oleti",color:"#00D1FF",x:n.x,y:n.y,isAnimated:!0,showName:!n.comment})]}),c&&o.jsx("div",{style:{position:"fixed",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:3e4},children:o.jsx(up,{name:"You",color:"#E23744",x:e.x,y:e.y})})]})},ol=[{name:"default",className:"cycle-btn-default",text:"Get in Touch"},{name:"retro",className:"cycle-btn-retro",text:"CONTACT.EXE"},{name:"neo",className:"cycle-btn-neo",text:"START_MAIL"},{name:"old",className:"cycle-btn-old",text:"Send Mail..."},{name:"glitch",className:"cycle-btn-glitch",text:"C0NTACT_N0W"},{name:"glass",className:"cycle-btn-glass",text:"Connect"},{name:"clay",className:"cycle-btn-clay",text:"Get in Touch"}],FT=({compact:e=!1})=>{const[t,n]=y.useState(0),[i,r]=y.useState(!1);return y.useEffect(()=>{let s;return i?s=setInterval(()=>{n(a=>(a+1)%ol.length)},250):n(0),()=>clearInterval(s)},[i]),o.jsxs(o.Fragment,{children:[o.jsx("div",{className:"cycle-btn-mobile-hide",style:{display:"inline-block",minWidth:e?"105px":"130px",height:e?"32px":"42px",position:"relative"},children:o.jsx("a",{href:"mailto:oletigowtham8803@gmail.com?subject=Hello%20Gowtham!",className:`cycle-btn ${e?"cycle-btn-compact":""} ${ol[t].className}`,onMouseEnter:()=>r(!0),onMouseLeave:()=>r(!1),style:{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%, -50%)",width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"},children:ol[t].text})}),o.jsx("style",{children:`
+        .cycle-btn {
+          text-decoration: none;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: all 0.1s ease;
+          white-space: nowrap;
+          border-radius: 50px;
+          box-sizing: border-box;
+        }
+
+        .cycle-btn-compact {
+          font-size: 0.8rem;
+        }
+        
+        /* Default Clean Style - Black */
+        .cycle-btn-default {
+          background: #111;
+          color: #fff;
+          border: 1px solid #111;
+          font-weight: 600;
+          font-family: var(--font-main);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* 80s Retro Synthwave */
+        .cycle-btn-retro {
+          background: #2b003b;
+          color: #00ffff;
+          font-family: 'Courier New', monospace;
+          border: 2px solid #ff00ff;
+          box-shadow: 0 0 8px #ff00ff, inset 0 0 8px #ff00ff;
+          border-radius: 0;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          text-shadow: 1px 0 #ff0000;
+          transform: skew(-3deg);
+        }
+
+        /* Neobrutalism */
+        .cycle-btn-neo {
+          background: #FFD700;
+          color: #000;
+          border: 3px solid #000;
+          box-shadow: 4px 4px 0px #000;
+          border-radius: 0;
+          font-weight: 900;
+          font-family: 'Arial Black', sans-serif;
+          transform: rotate(1deg);
+        }
+
+        /* Windows 95 Style */
+        .cycle-btn-old {
+          background: #c0c0c0;
+          color: #000;
+          border-top: 2px solid #fff;
+          border-left: 2px solid #fff;
+          border-right: 2px solid #404040;
+          border-bottom: 2px solid #404040;
+          box-shadow: 1px 1px 0px #000;
+         

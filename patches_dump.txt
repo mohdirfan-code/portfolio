@@ -1,0 +1,166 @@
+
+--- patch10.py ---
+import json
+
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+idx = c.find('useRef(null)')
+if idx != -1:
+    res = []
+    # find all instances of useRef(null) in the main App
+    # The main app component contains `q0=pe(T...`
+    main_app_idx = c.find('q0=pe(')
+    start = max(0, main_app_idx - 500)
+    end = min(len(c), main_app_idx + 1000)
+    
+    with open('tmp_app.txt', 'w', encoding='utf-8') as fw:
+        fw.write(c[start:end])
+    print("Exported tmp_app")
+
+--- patch11.py ---
+import re
+import json
+
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+# The original work section starts around: o.jsx("section",{id:"work",ref:s,children:o.jsxs(C.div,{variants:Xi...
+work_start = c.find('o.jsx("section",{id:"work",ref:s')
+if work_start == -1:
+    print("Could not find work start")
+else:
+    # Need to find the end of the section
+    # Let's search for the start of the next section, which is photography
+    photog_start = c.find('o.jsx("section",{id:"photography"')
+    work_content = c[work_start:photog_start]
+    
+    with open('tmp_work_section.txt', 'w', encoding='utf-8') as fw:
+        fw.write(work_content)
+
+    print("Extracted work section")
+
+--- patch12.py ---
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+work_start = c.find('o.jsx("section",{id:"work",ref:s')
+photog_start = c.find('o.jsx("section",{id:"photography"')
+
+if work_start != -1 and photog_start != -1:
+    old_work = c[work_start:photog_start]
+
+    projects_map = '[{title:"Autonomous Job Application Agent",desc:"An LLM-powered autonomous agent that discovers job opportunities, enriches company data, and generates personalized outreach using AI reasoning and API orchestration.",tech:["Python","LangChain","LLM APIs","Automation"],link:"https://github.com/mohdirfan-code"},{title:"InsightPDF — Production RAG System",desc:"A production-ready Retrieval-Augmented Generation system that enables intelligent question answering over documents using vector search and contextual LLM responses.",tech:["Python","LangChain","FAISS","RAG Pipelines"],link:"https://github.com/mohdirfan-code"},{title:"Zidio Workplace Emotion Dashboard",desc:"A multimodal AI system analyzing facial expressions and speech signals to visualize workplace mood trends such as engagement, stress, and burnout.",tech:["DeepFace","Whisper","FastAPI","Python"],link:"https://github.com/mohdirfan-code"},{title:"AI Potential Client Identifier",desc:"An AI model that analyzes incoming client requests and identifies high-potential leads based on urgency, budget signals, industry fit, and communication quality.",tech:["Machine Learning","Python","NLP","Data Analysis"],link:"https://github.com/mohdirfan-code"}].map((p,i)=>o.jsxs(C.a,{href:p.link,target:"_blank",rel:"noopener noreferrer",variants:he,whileHover:{y:-6,boxShadow:"0 20px 40px rgba(255,255,255,0.05), 0 0 20px #000"},style:{display:"flex",flexDirection:"column",textDecoration:"none",color:"#111",background:"#fff",borderRadius:"16px",padding:"1.5rem",boxShadow:"0 4px 15px rgba(0,0,0,0.1)",textAlign:"center"},children:[o.jsx("div",{style:{overflow:"hidden",borderRadius:"12px",marginBottom:"1.5rem",width:"100%",aspectRatio:"16/9",background:"#f5f5f5"},children:o.jsx(C.div,{whileHover:{scale:1.05},transition:{duration:0.3},style:{width:"100%",height:"100%",background:"linear-gradient(135deg, #eee 0%, #ddd 100%)"}})}),o.jsx("h3",{style:{fontSize:"1.15rem",fontWeight:"600",marginBottom:"0.5rem",fontFamily:"var(--font-main)"},children:p.title}),o.jsx("p",{style:{fontSize:"0.9rem",lineHeight:"1.5",opacity:0.8,marginBottom:"1.5rem",flex:1},children:p.desc}),o.jsx("div",{style:{display:"flex",flexWrap:"wrap",gap:"0.5rem",justifyContent:"center"},children:p.tech.map(t=>o.jsx("span",{style:{padding:"0.25rem 0.6rem",background:"rgba(0,0,0,0.05)",borderRadius:"20px",fontSize:"0.75rem",fontWeight:"500"},children:t},t))})],i))'
+    
+    new_work = 'o.jsx(C.section,{id:"work",ref:s,initial:{backgroundColor:"rgba(0,0,0,0)"},whileInView:{backgroundColor:"#000000"},viewport:{margin:"-25% 0px -25% 0px"},transition:{duration:0.8},style:{padding:"6rem 0",marginBottom:"0"},children:o.jsxs(C.div,{variants:Xi,initial:"hidden",whileInView:"visible",viewport:{once:!0,margin:"-10%"},className:"section-inner container",children:[o.jsx(C.div,{variants:he,style:{marginBottom:"4rem",textAlign:"center"},children:o.jsx("h2",{className:"section-label",style:{color:"rgba(255,255,255,0.5)"},children:o.jsx(_s,{children:"MY WORKS"})})}),o.jsx("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))",gap:"2rem",maxWidth:"1000px",margin:"0 auto"},children:REPLACE_PROJECTS})]})}),'
+    new_work = new_work.replace('REPLACE_PROJECTS', projects_map)
+
+    c = c.replace(old_work, new_work)
+    
+    with open('assets/index-f92d7118.js', 'w', encoding='utf-8') as f:
+        f.write(c)
+    print("Patch 12 applied")
+else:
+    print("Failed to find work/photography bounds")
+
+--- patch13.py ---
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+faulty = 'children:t},t))})],i))})]})'
+correct = 'children:t},t))}]},i))})]})'
+
+if faulty in c:
+    c = c.replace(faulty, correct)
+    with open('assets/index-f92d7118.js', 'w', encoding='utf-8') as f:
+        f.write(c)
+    print("Fixed syntax error")
+else:
+    print("Faulty string not found")
+
+--- patch5.py ---
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+idx = c.find('photography"')
+if idx != -1:
+    with open('tmp_photog3.txt', 'w', encoding='utf-8') as f:
+        f.write(c[max(0, idx-500):idx+3000])
+    print("Found photography")
+else:
+    print("Not found")
+
+idx2 = c.find('work-list')
+if idx2 != -1:
+    with open('tmp_work_list.txt', 'w', encoding='utf-8') as f:
+        f.write(c[max(0, idx2-500):idx2+6000])
+    print("Found work list")
+
+--- patch6.py ---
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+idx = c.find('id="photography"')
+if idx == -1:
+    idx = c.find('id="photography"')
+if idx == -1:
+    idx = c.find('photography')
+    
+if idx != -1:
+    print(c[max(0, idx-500):idx+500])
+else:
+    print("Not found")
+
+# Look for night-section
+print("night-section count:", c.count("night-section"))
+idx2 = c.find('night-section')
+if idx2 != -1:
+    print("context nearby night-section:")
+    print(c[max(0, idx2-300):idx2+800])
+
+print("finding scroll hooks")
+print(c[c.find('useScroll'):c.find('useScroll')+1000])
+
+
+--- patch7.py ---
+import json
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+idx = c.find('id="photography"')
+if idx == -1: idx = c.find('id:"photography"')
+if idx == -1: idx = c.find("id:'photography'")
+if idx == -1: idx = c.find('id: "photography"')
+
+if idx != -1:
+    with open('tmp_p_section.txt', 'w', encoding='utf-8') as f:
+        f.write(c[max(0, idx-500):idx+500])
+    print("Found photography section definition")
+else:
+    print("Not found")
+
+# Let's locate the entire component definition containing `useScroll` for the global background.
+idx_scroll = c.find('pe(T,[0,.1,.9,1],["#FAF8F5","#000000","#000000","#FAF8F5"])')
+if idx_scroll != -1:
+    with open('tmp_scroll.txt', 'w', encoding='utf-8') as f:
+        f.write(c[max(0, idx_scroll-1500):idx_scroll+1000])
+    print("Found scroll transitions")
+
+--- patch8.py ---
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+idx = c.find('backgroundColor:q0')
+if idx != -1:
+    with open('tmp_scroll_layout.txt', 'w', encoding='utf-8') as f:
+        f.write(c[max(0, idx-1500):idx+500])
+
+--- patch9.py ---
+with open('assets/index-f92d7118.js', 'r', encoding='utf-8') as f:
+    c = f.read()
+
+# look for "const t=y.useRef("
+idx = c.find('const t=y.useRef(')
+if idx != -1:
+    with open('tmp_refs.txt', 'w', encoding='utf-8') as f:
+        f.write(c[idx:idx+800])
